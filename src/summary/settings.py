@@ -11,6 +11,7 @@ environ.Env.read_env(env_file=str(BASE_DIR / "youtube" / '.env'))
 
 SECRET_KEY = env('SECRET_KEY')
 GOOGLE_GENAI_API_KEY = env('GOOGLE_GENAI_API_KEY')
+COOKIE_FILE_PATH = env('COOKIE_FILE_PATH', default=os.path.join(BASE_DIR, 'cookies', 'cookies_youtube.txt'))
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 

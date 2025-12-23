@@ -226,7 +226,7 @@ def summarize_video(request):
         print(f"Diagnostic HTTP échoué pour {diag_url}: {e}")
 
     try:
-        cookie_path = os.path.join(settings.BASE_DIR, 'cookies', 'cookies_youtube.txt')
+        cookie_path = settings.COOKIE_FILE_PATH
         text = fetch_transcript_text(video_id, cookie_path=cookie_path)
         if not text.strip():
             return JsonResponse({"error": "Transcription vide ou indisponible."}, status=400)

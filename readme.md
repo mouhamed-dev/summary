@@ -70,7 +70,9 @@ Summary.MouhaTech est une application web Django qui permet aux utilisateurs de 
      ```
 
 6. (Optionnel) Configurer les cookies pour les vidéos restreintes :
-   - Placer vos cookies YouTube dans `cookies/cookies_youtube.txt`
+   - Placer vos cookies YouTube dans `cookies/cookies_youtube.txt` (par défaut)
+   - Ou définir `COOKIE_FILE_PATH` dans les variables d'environnement pour un chemin personnalisé
+   - Pour exporter les cookies YouTube : voir https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
 
 ## Utilisation
 
@@ -133,6 +135,19 @@ summary/
 3. Faire vos changements
 4. Tester thoroughly
 5. Soumettre une pull request
+
+## Déploiement
+
+Pour déployer en production :
+
+1. Configurer les variables d'environnement :
+   - `GOOGLE_GENAI_API_KEY` : Votre clé API Google Gemini
+   - `COOKIE_FILE_PATH` : Chemin vers le fichier de cookies YouTube (optionnel)
+   - Autres variables Django standard (SECRET_KEY, DEBUG=False, ALLOWED_HOSTS, etc.)
+
+2. Assurer que le fichier de cookies est présent sur le serveur si nécessaire pour les vidéos restreintes.
+
+3. Utiliser un serveur WSGI comme Gunicorn pour Django en production.
 
 ## Auteur
 
