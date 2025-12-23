@@ -35,7 +35,7 @@ Summary.MouhaTech est une application web Django qui permet aux utilisateurs de 
    python -m venv env
    env\Scripts\activate  # Sur Windows
    source env/bin/activate # Sur MacOS/Linux
-    ```
+   ```
 
 3. Installer les dépendances :
 
@@ -45,6 +45,7 @@ Summary.MouhaTech est une application web Django qui permet aux utilisateurs de 
 
 4. **Configurez les variables d'environnement :**
    Créez un fichier `env` dans le dossier `src/youtube/` avec les variables suivantes :
+
    - Obtenir une clé API Google Gemini depuis [Google AI Studio](https://makersuite.google.com/app/apikey)
 
    ```bash
@@ -54,14 +55,14 @@ Summary.MouhaTech est une application web Django qui permet aux utilisateurs de 
    ALLOWED_HOSTS=localhost,127.0.0.1
    ```
 
-4. Configurer la base de données :
+5. Configurer la base de données :
 
    ```bash
    cd src
    python manage.py migrate
    ```
 
-5. Configurer la clé API :
+6. Configurer la clé API :
 
    - Obtenir une clé API Google Gemini depuis [Google AI Studio](https://makersuite.google.com/app/apikey)
    - L'ajouter à `summary/settings.py` :
@@ -69,7 +70,7 @@ Summary.MouhaTech est une application web Django qui permet aux utilisateurs de 
      GOOGLE_GENAI_API_KEY = 'votre-clé-api-ici'
      ```
 
-6. (Optionnel) Configurer les cookies pour les vidéos restreintes :
+7. (Optionnel) Configurer les cookies pour les vidéos restreintes :
    - Placer vos cookies YouTube dans `cookies/cookies_youtube.txt` (par défaut)
    - Ou définir `COOKIE_FILE_PATH` dans les variables d'environnement pour un chemin personnalisé
    - Pour exporter les cookies YouTube : voir https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
@@ -114,7 +115,7 @@ summary/
 │   │   └── static/
 │   └── manage.py
 ├── env/                  # Environnement virtuel
-├── redame.md          
+├── redame.md
 └── requirements.txt
 ```
 
@@ -141,6 +142,7 @@ summary/
 Pour déployer en production :
 
 1. Configurer les variables d'environnement :
+
    - `GOOGLE_GENAI_API_KEY` : Votre clé API Google Gemini
    - `COOKIE_FILE_PATH` : Chemin vers le fichier de cookies YouTube (optionnel)
    - Autres variables Django standard (SECRET_KEY, DEBUG=False, ALLOWED_HOSTS, etc.)
