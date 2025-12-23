@@ -291,7 +291,7 @@ def summarize_video(request):
     
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash",
+            model="gemini-2.5-flash",
             contents=prompt
         )
         summary = getattr(response, "text", None) or getattr(response, "output_text", None) or ""
@@ -306,7 +306,7 @@ def summarize_video(request):
             "limite" in msg.lower()
         ):
             return JsonResponse({"error": "Désole 😔, le service de résumé est temporairement saturé. Merci de réessayer dans quelques minutes."}, status=429)
-        return JsonResponse({"error": f"Erreur API: {msg}"}, status=500)
+        return JsonResponse({"error": "Une erreur est survenue lors de la génération du résumé. Merci de réessayer plus tard."}, status=500)
 
     # --- Markdown to HTML ---
     import re, html
