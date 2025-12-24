@@ -7,6 +7,7 @@ import os
 from urllib.parse import urlparse, parse_qs
 import time, requests
 from http.cookiejar import MozillaCookieJar
+from django.utils import timezone
 
 try:
     from youtube_transcript_api._errors import (
@@ -46,8 +47,13 @@ except Exception:
     yt_dlp = None
 
 
+hour = timezone.localtime().hour
+salutation = "Bonsoir" if hour >= 17 else "Bonjour"
+
+
 def index(request):
-    return render(request, "youtube/index.html")
+    context = {"salutation": salutation}
+    return render(request, "youtube/index.html", context)
 
 def extract_video_id(url: str):
     try:
@@ -236,7 +242,8 @@ def summarize_video(request):
     # Prompt: adapt language and size
     prompt = (
         f"Tu es un assistant qui résume des vidéos YouTube dans la langue suivante : {langue_label}. "
-        f"Génère un résumé structuré en puces avec les points clés, puis une conclusion courte. "
+        f"Génère un résumé clair et concis avec des phrases complètes, sans guillemets autour des mots ou expressions. "
+        f"Structure le résumé en paragraphes ou points clés avec contexte, suivi d'une conclusion courte. "
         f"Le résumé doit être de taille : {taille_label}. "
         f"Si la transcription est longue, regroupe par thèmes.\n"
         f"IMPORTANT: Le résumé doit être rédigé en {langue_label} uniquement.\n"
@@ -245,7 +252,8 @@ def summarize_video(request):
     if langue == "en":
         prompt = (
             f"You are an assistant that summarizes YouTube videos in English. "
-            f"Generate a structured summary with bullet points for the key points, followed by a short conclusion. "
+            f"Generate a clear and concise summary with full sentences, without quotation marks around words or phrases. "
+            f"Structure the summary in paragraphs or key points with context, followed by a short conclusion. "
             f"The summary should be {taille_label} in length. "
             f"If the transcript is long, group by themes.\n"
             f"IMPORTANT: The summary must be written in English only.\n"
@@ -254,7 +262,8 @@ def summarize_video(request):
     elif langue == "es":
         prompt = (
             f"Eres un asistente que resume videos de YouTube en español. "
-            f"Genera un resumen estructurado con viñetas para los puntos clave, seguido de una breve conclusión. "
+            f"Genera un resumen claro y conciso con frases completas, sin comillas alrededor de palabras o frases. "
+            f"Estructura el resumen en párrafos o puntos clave con contexto, seguido de una breve conclusión. "
             f"El resumen debe ser de tamaño {taille_label}. "
             f"Si la transcripción es larga, agrupa por temas.\n"
             f"IMPORTANTE: El resumen debe estar escrito solo en español.\n"
@@ -263,7 +272,8 @@ def summarize_video(request):
     elif langue == "de":
         prompt = (
             f"Du bist ein Assistent, der YouTube-Videos auf Deutsch zusammenfasst. "
-            f"Erstelle eine strukturierte Zusammenfassung mit Stichpunkten für die wichtigsten Punkte und einem kurzen Fazit. "
+            f"Erstelle eine klare und präzise Zusammenfassung mit vollständigen Sätzen, ohne Anführungszeichen um Wörter oder Phrasen. "
+            f"Strukturiere die Zusammenfassung in Absätzen oder Schlüsselpunkten mit Kontext, gefolgt von einem kurzen Fazit. "
             f"Die Zusammenfassung sollte {taille_label} sein. "
             f"Wenn das Transkript lang ist, gruppiere nach Themen.\n"
             f"WICHTIG: Die Zusammenfassung muss ausschließlich auf Deutsch verfasst sein.\n"
@@ -272,7 +282,8 @@ def summarize_video(request):
     elif langue == "ar":
         prompt = (
             f"أنت مساعد يلخص مقاطع فيديو يوتيوب باللغة العربية. "
-            f"أنشئ ملخصًا منظمًا بنقاط رئيسية متبوعة بخاتمة قصيرة. "
+            f"أنشئ ملخصًا واضحًا وموجزًا بجمل كاملة، بدون علامات تنصيص حول الكلمات أو العبارات. "
+            f"هيكل الملخص في فقرات أو نقاط رئيسية مع السياق، متبوعة بخاتمة قصيرة. "
             f"يجب أن يكون الملخص بحجم {taille_label}. "
             f"إذا كان النص طويلاً، قم بالتجميع حسب الموضوعات.\n"
             f"مهم: يجب أن يكون الملخص باللغة العربية فقط.\n"
@@ -282,7 +293,8 @@ def summarize_video(request):
     elif langue == "it":
         prompt = (
             f"Sei un assistente che riassume video di YouTube in italiano. "
-            f"Genera un riassunto strutturato con punti per i punti chiave, seguito da una breve conclusione. "
+            f"Genera un riassunto chiaro e conciso con frasi complete, senza virgolette attorno a parole o frasi. "
+            f"Struttura il riassunto in paragrafi o punti chiave con contesto, seguito da una breve conclusione. "
             f"Il riassunto deve essere di dimensione {taille_label}. "
             f"Se il testo è lungo, raggruppa per argomenti.\n"
             f"IMPORTANTE: Il riassunto deve essere scritto in italiano solo.\n"
@@ -327,9 +339,9 @@ def summarize_video(request):
                 title_match = re.match(r'^(#{1,3})\s+(.*)', line)
                 if title_match:
                     level = len(title_match.group(1))
-                    html_lines.append(f'<h{level} class="text-lg font-semibold mt-2">{title_match.group(2)}</h{level}>')
+                    html_lines.append(f'<h{level} class="text-lg font-semibold">{title_match.group(2)}</h{level}>')
                 elif line.strip():
-                    html_lines.append(f'<p class="mb-1 text-justify">{line}</p>')
+                    html_lines.append(f'<p class="text-justify">{line}</p>')
         return '\n'.join(html_lines)
 
     summary_html = markdown_to_html(summary)

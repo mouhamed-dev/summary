@@ -85,7 +85,7 @@
                             try {
                                 const text = await navigator.clipboard.readText();
                                 if (!isYoutube(text)) {
-                                    alert("Bonjour, seul les liens youtube sont acceptés !");
+                                    alert("{{salutation}}, seul les liens youtube sont acceptés !");
                                     return;
                                 }
                                 lien = document.getElementById("url");
